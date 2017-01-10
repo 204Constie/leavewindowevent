@@ -1,4 +1,4 @@
-(function(){
+(function(document, window){
 
 var pageLeaveModal = {
 	addEvent: function(obj, evt, fn) {
@@ -29,10 +29,10 @@ var pageLeaveModal = {
 	},
 
 	handler: function(e) {
-		console.log(pageLeaveModal);
 	    e = e ? e : window.event;
 	    var target = e.target || e.srcElement;
-	    if (target.nodeName == "HTML") {
+	    console.log(target.nodeName);
+	    if (target.nodeName.toLowerCase() === 'html') {
 	        pageLeaveModal.showModal();
 	        pageLeaveModal.removeEvent(document, 'mouseout', pageLeaveModal.handler);
 	    }
@@ -52,8 +52,15 @@ var pageLeaveModal = {
 pageLeaveModal.generateRandomEvent();
 
 if(window.location.href.indexOf('gclid') > -1){
-	pageLeaveModal.addEvent(document, 'mouseout', pageLeaveModal.handler);
-	pageLeaveModal.showContent();
+	setTimeout(function(){
+		pageLeaveModal.addEvent(document, 'mouseout', pageLeaveModal.handler);
+		pageLeaveModal.showContent();
+	}, 1000)
+
+	setTimeout(function(){
+		console.log('event removed');
+		pageLeaveModal.removeEvent(document, 'mouseout', pageLeaveModal.handler);
+	}, 15000);
 }
 
-})();
+})(document, window);
