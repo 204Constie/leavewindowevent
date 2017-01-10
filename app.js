@@ -1,4 +1,5 @@
 (function(document, window){
+'use strict';
 
 var pageLeaveModal = {
 	addEvent: function(obj, evt, fn) {
@@ -30,12 +31,27 @@ var pageLeaveModal = {
 
 	handler: function(e) {
 	    e = e ? e : window.event;
+	    console.log('e.relatedTarget: ', e.relatedTarget);
+	    console.log('e.toElement: ', e.toElement);
+	    console.log('e.target: ', e.target);
+	    console.log('e.srcElement: ', e.srcElement);
 	    var target = e.target || e.srcElement;
-	    console.log(target.nodeName);
-	    if (target.nodeName.toLowerCase() === 'html') {
-	        pageLeaveModal.showModal();
+	    var tar = e.relatedTarget || e.toElement;
+	    var t;
+
+	    if(tar){
+	    	t = tar.nodeName.toLowerCase();
+	    }
+
+	    if((t === 'html') || target.nodeName.toLowerCase() === 'html'){
+	    	pageLeaveModal.showModal();
 	        pageLeaveModal.removeEvent(document, 'mouseout', pageLeaveModal.handler);
 	    }
+
+	    // if (target.nodeName.toLowerCase() === 'html' || t === 'html') {
+	    //     pageLeaveModal.showModal();
+	    //     pageLeaveModal.removeEvent(document, 'mouseout', pageLeaveModal.handler);
+	    // }
 	},
 
 	showModal: function(){
