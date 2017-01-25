@@ -31,11 +31,6 @@ var pageLeaveModal = {
 
 	handler: function(e) {
 	    e = e ? e : window.event;
-	    console.log('e.relatedTarget: ', e.relatedTarget);
-	    console.log('e.toElement: ', e.toElement);
-	    console.log('e.target: ', e.target);
-	    console.log('e.srcElement: ', e.srcElement);
-	    var target = e.target || e.srcElement;
 	    var tar = e.relatedTarget || e.toElement;
 	    var t;
 
@@ -43,15 +38,9 @@ var pageLeaveModal = {
 	    	t = tar.nodeName.toLowerCase();
 	    }
 
-	    if((t === 'html') || target.nodeName.toLowerCase() === 'html'){
+	    if((t === 'html' || !tar) && !((e.screenX > e.target.body.scrollWidth - 1) && (e.screenX < e.target.body.scrollWidth + 5))){
 	    	pageLeaveModal.showModal();
-	        pageLeaveModal.removeEvent(document, 'mouseout', pageLeaveModal.handler);
 	    }
-
-	    // if (target.nodeName.toLowerCase() === 'html' || t === 'html') {
-	    //     pageLeaveModal.showModal();
-	    //     pageLeaveModal.removeEvent(document, 'mouseout', pageLeaveModal.handler);
-	    // }
 	},
 
 	showModal: function(){
@@ -68,15 +57,16 @@ var pageLeaveModal = {
 pageLeaveModal.generateRandomEvent();
 
 if(window.location.href.indexOf('gclid') > -1){
-	setTimeout(function(){
-		pageLeaveModal.addEvent(document, 'mouseout', pageLeaveModal.handler);
-		pageLeaveModal.showContent();
-	}, 1000)
+	pageLeaveModal.addEvent(document, 'mouseleave', pageLeaveModal.handler);
+	pageLeaveModal.showContent();
 
+
+	//timeout set to remove the event
 	setTimeout(function(){
 		console.log('event removed');
-		pageLeaveModal.removeEvent(document, 'mouseout', pageLeaveModal.handler);
+		pageLeaveModal.removeEvent(document, 'mouseleave', pageLeaveModal.handler);
 	}, 15000);
+
 }
 
 })(document, window);
