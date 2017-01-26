@@ -5,8 +5,7 @@ var pageLeaveModal = {
 	addEvent: function(obj, evt, fn) {
 	    if (obj.addEventListener) {
 	        obj.addEventListener(evt, fn, false);
-	    }
-	    else if (obj.attachEvent) {
+	    } else if (obj.attachEvent) {
 	        obj.attachEvent("on" + evt, fn);
 	    }
 	},
@@ -38,9 +37,17 @@ var pageLeaveModal = {
 	    	t = tar.nodeName.toLowerCase();
 	    }
 
-	    if((t === 'html' || !tar) && !((e.screenX > e.target.body.scrollWidth - 1) && (e.screenX < e.target.body.scrollWidth + 5))){
-	    	pageLeaveModal.showModal();
-	    }
+	    if(e.target.body){
+		    if((t === 'html' || !tar) && !((e.screenX > e.target.body.scrollWidth - 1) && (e.screenX < e.target.body.scrollWidth + 7))){
+		    	pageLeaveModal.showModal();
+		    	pageLeaveModal.removeEvent(document, 'mouseout', pageLeaveModal.handler);
+		    }
+		} else if(e.target.scrollWidth){
+			if((t === 'html' || !tar) && !((e.screenX > e.target.scrollWidth - 1) && (e.screenX < e.target.scrollWidth + 15))){
+		    	pageLeaveModal.showModal();
+		    	pageLeaveModal.removeEvent(document, 'mouseout', pageLeaveModal.handler);
+		    }
+		}
 	},
 
 	showModal: function(){
@@ -56,15 +63,18 @@ var pageLeaveModal = {
 
 pageLeaveModal.generateRandomEvent();
 
+console.log('window.location.href.indexOf(\'gclid\'): ', window.location.href.indexOf('gclid'));
+
 if(window.location.href.indexOf('gclid') > -1){
-	pageLeaveModal.addEvent(document, 'mouseleave', pageLeaveModal.handler);
+	console.log('hjb');
+	pageLeaveModal.addEvent(document, 'mouseout', pageLeaveModal.handler);
 	pageLeaveModal.showContent();
 
 
 	//timeout set to remove the event
 	setTimeout(function(){
 		console.log('event removed');
-		pageLeaveModal.removeEvent(document, 'mouseleave', pageLeaveModal.handler);
+		pageLeaveModal.removeEvent(document, 'mouseout', pageLeaveModal.handler);
 	}, 15000);
 
 }
